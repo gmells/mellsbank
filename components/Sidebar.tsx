@@ -1,4 +1,5 @@
 import { sidebarLinks } from "@/constants";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -20,7 +21,11 @@ const Sidebar = ({ user }: SiderbarProps) => {
 
         {sidebarLinks.map((item) => {
           return (
-            <Link href={item.route} key={item.label}>
+            <Link
+              href={item.route}
+              key={item.label}
+              className={cn("sidebar-link")}
+            >
               {item.label}
             </Link>
           );
