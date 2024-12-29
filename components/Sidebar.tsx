@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Sidebar = ({ user }: SiderbarProps) => {
-
   const pathname = usePathname();
 
   return (
@@ -24,8 +23,8 @@ const Sidebar = ({ user }: SiderbarProps) => {
         </Link>
 
         {sidebarLinks.map((item) => {
-
           const isActive =
+            pathname === item.route || pathname.startsWith(`${item.route}/`);
 
           return (
             <Link
