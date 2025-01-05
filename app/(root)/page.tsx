@@ -29,7 +29,7 @@ const Home = () => {
         RECENT TRANSACTONS
       </div>
 
-      <RightSidebar user={loggedIn} transactions={[]} banks={[]} />
+      <RightSidebar user={loggedIn} transactions={[]} banks={[{}, {}]} />
     </section>
   );
 };
