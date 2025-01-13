@@ -91,6 +91,26 @@ const AuthForm = ({ type }: { type: string }) => {
                   </div>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <div className="form-item">
+                    <FormLabel className="form-label">Password</FormLabel>
+                    <div className="flex w-full flex-col">
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your password"
+                          className="input-class"
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="form-message mt-2" />
+                    </div>
+                  </div>
+                )}
+              />
               <Button type="submit">Submit</Button>
             </form>
           </Form>
