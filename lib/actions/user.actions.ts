@@ -15,7 +15,7 @@ export const signIn = async () => {
 
 
 export const signUp = async (userData: SignUpParams) => {
-    const {email password, firstName, lastName} = userData
+    const {email, password, firstName, lastName} = userData
     try {
         const { account } = await createAdminClient();
 
