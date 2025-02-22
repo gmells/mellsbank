@@ -21,6 +21,7 @@
     "next": "15.0.3",
     "node-appwrite": "^14.2.0",
     "nodemon": "^3.1.9",
+    "plaid": "^31.1.0",
     "query-string": "^9.1.1",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
