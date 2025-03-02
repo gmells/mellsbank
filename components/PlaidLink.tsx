@@ -1,6 +1,6 @@
 import React from "react";
 
-const PlaidLink = () => {
+const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
   return <div>PlaidLink</div>;
 };
 
