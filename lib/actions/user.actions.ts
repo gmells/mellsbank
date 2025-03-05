@@ -4,6 +4,7 @@ import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "../utils";
+import { CountryCode, Products } from "plaid";
 
 export const signIn = async ({email, password}: signInProps) => {
     try {
@@ -71,5 +72,22 @@ export const logoutAccount = async () => {
     } catch (error) {
         
         return null;
+    }
+}
+
+
+export const createLinkToken = async (user: User) {
+    try {
+        const tokenParams = {
+            user: {
+                Client_user_id: user.$id
+            },
+            client_name: user.name,
+            products: ['auth'] as Products[],
+            language: 'en',
+            country_codes: ['GB'] as CountryCode[],
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
