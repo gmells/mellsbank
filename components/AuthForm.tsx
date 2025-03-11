@@ -36,20 +36,20 @@ const AuthForm = ({ type }: { type: string }) => {
 
     try {
       //sign up with appwrite and create plaid token
-      const userData = {
-        firstName: data.firstName!,
-        lastName: data.lastName!,
-        address1: data.address1!,
-        city: data.city!,
-        state: data.state!,
-        postalCode: data.postalCode!,
-        dateOfBirth: data.dateOfBirth!,
-        ssn: data.ssn!,
-        email: data.email,
-        password: data.password,
-      };
-
       if (type === "sign-up") {
+        const userData = {
+          firstName: data.firstName!,
+          lastName: data.lastName!,
+          address1: data.address1!,
+          city: data.city!,
+          state: data.state!,
+          postalCode: data.postalCode!,
+          dateOfBirth: data.dateOfBirth!,
+          ssn: data.ssn!,
+          email: data.email,
+          password: data.password,
+        };
+
         const newUser = await signUp(userData);
 
         setUser(newUser);
@@ -98,7 +98,7 @@ const AuthForm = ({ type }: { type: string }) => {
         </div>
       </header>
       {user ? (
-        <div className="flex-col gap-4">
+        <div className="flex flex-col gap-4">
           <PlaidLink user={user} variant="primary" />
         </div>
       ) : (
@@ -140,7 +140,7 @@ const AuthForm = ({ type }: { type: string }) => {
                       control={form.control}
                       name="state"
                       label="State"
-                      placeholder="Example: LDN"
+                      placeholder="Example: NY"
                     />
                     <CustomInput
                       control={form.control}
