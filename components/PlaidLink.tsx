@@ -19,7 +19,8 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
   useEffect(() => {
     const getLinkToken = async () => {
       const data = await createLinkToken(user);
-      setToken(data?.LinkToken);
+      console.log("🔍 Frontend received token:", data); // Debugging log
+      setToken(data?.link_token || "");
     };
 
     getLinkToken();
@@ -31,7 +32,7 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
 
       router.push("/");
     },
-    [user]
+    [user, router]
   );
 
   const config: PlaidLinkOptions = {
@@ -39,7 +40,12 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
     onSuccess,
   };
 
-  const { open, ready } = usePlaidLink(config);
+  const { open, ready } = usePlaidLink(
+    token ? config : ({} as PlaidLinkOptions)
+  );
+
+  console.log("Current Token State:", token);
+  console.log("Plaid Link Ready State:", ready);
 
   return (
     <>
