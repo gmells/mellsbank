@@ -19,7 +19,6 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
   useEffect(() => {
     const getLinkToken = async () => {
       const data = await createLinkToken(user);
-      console.log("🔍 Frontend received token:", data); // Debugging log
       setToken(data?.link_token || "");
     };
 
@@ -43,9 +42,6 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
   const { open, ready } = usePlaidLink(
     token ? config : ({} as PlaidLinkOptions)
   );
-
-  console.log("Current Token State:", token);
-  console.log("Plaid Link Ready State:", ready);
 
   return (
     <>
