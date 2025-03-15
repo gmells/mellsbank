@@ -2,12 +2,13 @@
 
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite";
-import { cookies } from "next/headers";
+
 import { encryptId, extractCustomerIdFromUrl, parseStringify } from "../utils";
 import { CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from "plaid";
 import { plaidClient } from "@/lib/plaid";
 import { revalidatePath } from "next/cache";
 import { addFundingSource, createDwollaCustomer } from "./dwolla.actions";
+import { cookies } from "next/headers";
 
 const { 
     APPWRITE_DATABASE_ID: DATABASE_ID, 
@@ -29,6 +30,7 @@ export const signIn = async ({email, password}: signInProps) => {
 
 
 export const signUp = async ({ password, ...userData}: SignUpParams) => {
+    const cookieStore = await cookies();
     const {email, firstName, lastName} = userData
 
     let newUserAccount;
@@ -69,7 +71,7 @@ export const signUp = async ({ password, ...userData}: SignUpParams) => {
 
         const session = await account.createEmailPasswordSession(email, password);
       
-        cookies().set("appwrite-session", session.secret, {
+        cookieStore.set("appwrite-session", session.secret, {
           path: "/",
           httpOnly: true,
           sameSite: "strict",
@@ -107,13 +109,14 @@ export const logoutAccount = async () => {
          await account.deleteSession('current')
     } catch (error) {
         
-        return null;
+        return error;
     }
 }
 
 
 export const createLinkToken = async (user: User) => {
     try {
+
         const tokenParams = {
             user: {
                 client_user_id: user.$id
@@ -122,15 +125,21 @@ export const createLinkToken = async (user: User) => {
             products: ['auth'] as Products[],
             language: 'en',
             country_codes: ['GB'] as CountryCode[],
-        }
+        };
+
 
         const response = await plaidClient.linkTokenCreate(tokenParams);
 
-        return parseStringify({ linkToken: response.data.link_token })
-    } catch (error) {
+        return { link_token: response.data.link_token }; // Remove parseStringify
+    }  catch (error) {
         console.log(error);
-    }
-}
+      }
+    
+    
+    
+    
+};
+
 
 
 export const createBankAccount = async ({
@@ -160,7 +169,7 @@ export const createBankAccount = async ({
 
         return parseStringify(bankAccount);
     } catch (error) {
-        
+        console.log(error);
     }
 }
 
