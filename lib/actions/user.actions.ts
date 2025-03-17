@@ -124,7 +124,7 @@ export const createLinkToken = async (user: User) => {
             client_name: `${user.firstName} ${user.lastName}`,
             products: ['auth'] as Products[],
             language: 'en',
-            country_codes: ['GB'] as CountryCode[],
+            country_codes: ['GB', 'US'] as CountryCode[],
         };
 
 
@@ -179,58 +179,63 @@ export const exchangePublicToken = async ({
     user,
 }: exchangePublicTokenProps) => {
     try {
-         // Exchange public token for access token and item ID 
-         const response = await plaidClient.itemPublicTokenExchange({ public_token: publicToken, });
+        console.log("🔄 Exchanging Public Token for Access Token...");
 
-         const accessToken = response.data.access_token;
-         const itemId = response.data.item_id;
+        // Exchange public token for access token and item ID 
+        const response = await plaidClient.itemPublicTokenExchange({ public_token: publicToken });
 
-          // Get account information from Plaid using the access token
-          const accountResponse = await plaidClient.accountsGet
-          ({
-            access_token: accessToken,
-          });
+        const accessToken = response.data.access_token;
+        const itemId = response.data.item_id;
 
-          const accountData = accountResponse.data.accounts[0];
 
-          // Create a processor token for Dwolla using the access token and account ID
-          const request: ProcessorTokenCreateRequest = {
+        // Get account information from Plaid using the access token
+        const accountResponse = await plaidClient.accountsGet({ access_token: accessToken });
+        const accountData = accountResponse.data.accounts[0];
+        
+
+        // Create a processor token for Dwolla using the access token and account ID
+        const request: ProcessorTokenCreateRequest = {
             access_token: accessToken,
             account_id: accountData.account_id,
             processor: "dwolla" as ProcessorTokenCreateRequestProcessorEnum
-          };
+        };
 
-          const processorTokenResponse = await plaidClient.processorTokenCreate(request);
-          const processorToken = processorTokenResponse.data.processor_token;
+        const processorTokenResponse = await plaidClient.processorTokenCreate(request);
+        const processorToken = processorTokenResponse.data.processor_token;
 
-          // Create a funcding source URL for the account using the Dwolla customer ID, processor token, and bank name
-          const fundingSourceUrl = await addFundingSource({
+
+        // Create a funding source URL for the account using the Dwolla customer ID, processor token, and bank name
+        const fundingSourceUrl = await addFundingSource({
             dwollaCustomerId: user.dwollaCustomerId,
             processorToken,
             bankName: accountData.name,
-          });
+        });
 
-          // If the funding source URL is not created, throw an error
-          if (!fundingSourceUrl) throw Error;
+        if (!fundingSourceUrl) {
+            
+            throw new Error("Funding Source URL creation failed.");
+        }
 
-          // Create a bank account using the user ID, Item ID, account ID, access token, funding source URL, and shareable ID
-          await createBankAccount({
+      
+        await createBankAccount({
             userId: user.$id,
             bankId: itemId,
             accountId: accountData.account_id,
             accessToken,
             fundingSourceUrl,
             shareableId: encryptId(accountData.account_id)
-          });
+        });
 
-          // Revalidate the path to reflect the changes
-          revalidatePath("/")
 
-          // Return a success message
-          return parseStringify({
+        // Revalidate the path to reflect the changes
+        revalidatePath("/");
+
+        // Return a success message
+        return parseStringify({
             publicTokenExchange: "complete",
-          });
+        });
+
     } catch (error) {
-        console.error("An error occured while creating exchanging token:", error);
+        console.error("An error occurred while exchanging the public token:", error);
     }
-}
+};
