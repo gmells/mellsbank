@@ -97,7 +97,8 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
       institutionId: accountsResponse.data.item.institution_id!,
     });
 
-    const transactions = (await getTransactions({ accessToken: bank?.accessToken })) || [];
+    const transactions = (await getTransactions({ accessToken: bank?.accessToken }));
+    
    
 
     const account = {
@@ -114,10 +115,12 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     };
 
     // sort transactions by date such that the most recent transaction is first
-      //  const allTransactions = [...transactions, ...transferTransactions].sort(
-        const allTransactions = [...(transactions || [])].sort((a, b) => 
-          new Date(b.date).getTime() - new Date(a.date).getTime()
+       const allTransactions = [...(transactions || []) ].sort(
+        //  const allTransactions = [...transactions, ...transferTransactions].sort(   const allTransactions = [...(transactions || [])].sort((a, b) =>
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
+
+       
 
     return parseStringify({
       data: account,
@@ -150,45 +153,48 @@ export const getInstitution = async ({
 export const getTransactions = async ({
   accessToken,
 }: getTransactionsProps) => {
+  if (!accessToken) {
+    throw new Error("Access token is missing!");
+  }
+
   let hasMore = true;
-  let transactions: any = [];
-  
+  let cursor: string | undefined = undefined;
+  let transactions: any[] = [];
 
   try {
-    // Iterate through each page of new transaction updates for item
     while (hasMore) {
+      console.log(`Fetching transactions... cursor: ${cursor || "No cursor (First Request)"}`);
+
       const response = await plaidClient.transactionsSync({
         access_token: accessToken,
-        
+        cursor, // Pass cursor for pagination
       });
-    
-      
-      console.log("Plaid API Response:", JSON.stringify(response, null, 2)); // Logs full API response
-      
 
       const data = response.data;
 
-      transactions = response.data.added.map((transaction) => ({
-        id: transaction.transaction_id,
-        name: transaction.name,
-        paymentChannel: transaction.payment_channel,
-        type: transaction.payment_channel,
-        accountId: transaction.account_id,
-        amount: transaction.amount,
-        pending: transaction.pending,
-        category: transaction.category ? transaction.category[0] : "",
-        date: transaction.date,
-        image: transaction.logo_url,
-      }));
+      // Add new transactions from this request to the array
+      transactions.push(
+        ...data.added.map((transaction) => ({
+          id: transaction.transaction_id,
+          name: transaction.name,
+          paymentChannel: transaction.payment_channel,
+          type: transaction.payment_channel,
+          accountId: transaction.account_id,
+          amount: transaction.amount,
+          pending: transaction.pending,
+          category: transaction.category ? transaction.category[0] : "",
+          date: transaction.date,
+          image: transaction.logo_url,
+        }))
+      );
 
+      // Update cursor and check if more transactions exist
+      cursor = data.next_cursor;
       hasMore = data.has_more;
     }
 
-    console.log("Transactions Length:", transactions.length);
-console.log("Transactions Type:", Array.isArray(transactions)); // Should print `true`
     return parseStringify(transactions);
-    
   } catch (error) {
-    console.error("An error occurred while getting the accounts:", error);
+    console.error("❌ Error fetching transactions:", error);
   }
-}; 
+};
