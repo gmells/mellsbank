@@ -153,58 +153,47 @@ export const getInstitution = async ({
 export const getTransactions = async ({
   accessToken,
 }: getTransactionsProps) => {
+  
+  if (!accessToken) {
+    throw new Error("Access token is missing!");
+}
   let hasMore = true;
   let transactions: any = [];
-  let retryCount = 0;
-  let cursor: string | undefined = undefined;
-
-  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
+  
+ 
   try {
-    while (hasMore) {
-      try {
-        const response = await plaidClient.transactionsSync({
-          access_token: accessToken,
-          cursor: cursor, // Use cursor for pagination
-        });
+    // Iterate through each page of new transaction updates for item
+    // while (hasMore) {
+      const response = await plaidClient.transactionsSync({
+        access_token: accessToken,
+        
+      });
+    
+      
+     
+      
 
-        const data = response.data;
+      const data = response.data;
 
-        transactions = [
-          ...transactions,
-          ...data.added.map((transaction) => ({
-            id: transaction.transaction_id,
-            name: transaction.name,
-            paymentChannel: transaction.payment_channel,
-            type: transaction.payment_channel,
-            accountId: transaction.account_id,
-            amount: transaction.amount,
-            pending: transaction.pending,
-            category: transaction.category ? transaction.category[0] : "",
-            date: transaction.date,
-            image: transaction.logo_url,
-          })),
-        ];
+      transactions = response.data.added.map((transaction) => ({
+        id: transaction.transaction_id,
+        name: transaction.name,
+        paymentChannel: transaction.payment_channel,
+        type: transaction.payment_channel,
+        accountId: transaction.account_id,
+        amount: transaction.amount,
+        pending: transaction.pending,
+        category: transaction.category ? transaction.category[0] : "",
+        date: transaction.date,
+        image: transaction.logo_url,
+      }));
 
-        hasMore = data.has_more;
-        cursor = data.next_cursor; // Store the next cursor for pagination
-        retryCount = 0; // Reset retry count if successful
+      hasMore = data.has_more;
+    // }
 
-        // Add a small delay to prevent hitting rate limits
-        if (hasMore) await delay(500);
-      } catch (error: any) {
-        if (error.response?.status === 429 && retryCount < 5) {
-          const waitTime = Math.pow(2, retryCount) * 1000; // Exponential backoff: 1s, 2s, 4s, 8s...
-          console.warn(`Rate limit hit. Retrying in ${waitTime}ms...`);
-          await delay(waitTime);
-          retryCount++;
-        } else {
-          throw error;
-        }
-      }
-    }
-
+   
     return parseStringify(transactions);
+    
   } catch (error) {
     console.error("An error occurred while getting the accounts:", error);
   }
