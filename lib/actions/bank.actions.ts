@@ -165,8 +165,7 @@ export const getTransactions = async ({
     // Iterate through each page of new transaction updates for item
     while (hasMore) {
       const response = await plaidClient.transactionsSync({
-        access_token: accessToken,
-        
+        access_token: accessToken
       });
     
       
