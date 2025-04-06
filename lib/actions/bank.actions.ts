@@ -75,7 +75,7 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     });
     const accountData = accountsResponse.data.accounts[0];
 
-    get transfer transactions from appwrite
+    //get transfer transactions from appwrite
     const transferTransactionsData = await getTransactionsByBankId({
       bankId: bank.$id,
     });
@@ -115,8 +115,7 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     };
 
     // sort transactions by date such that the most recent transaction is first
-       const allTransactions = [...(transactions || []) ].sort(
-        //  const allTransactions = [...transactions, ...transferTransactions].sort(   const allTransactions = [...(transactions || [])].sort((a, b) =>
+        const allTransactions = [...transactions, ...transferTransactions].sort(  
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
 
