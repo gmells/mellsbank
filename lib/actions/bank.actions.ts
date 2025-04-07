@@ -162,7 +162,7 @@ export const getTransactions = async ({
  
   try {
     // Iterate through each page of new transaction updates for item
-    while (hasMore) {
+    //while (hasMore) {
       const response = await plaidClient.transactionsSync({
         access_token: accessToken
       });
@@ -187,7 +187,7 @@ export const getTransactions = async ({
       }));
 
       hasMore = data.has_more;
-    }
+    //}
 
    
     return parseStringify(transactions);
