@@ -16,6 +16,11 @@ const RecentTransactions = ({
 
   const indexOfLastTransaction = page * rowsPerPage;
   const indexofFirstTransaction = indexOfLastTransaction - rowsPerPage;
+
+  const currentTransactions = transactions.slice(
+    indexofFirstTransaction,
+    indexOfLastTransaction
+  );
   return (
     <section className="recent-transactions">
       <header className="flex items-center justify-between">
@@ -53,9 +58,9 @@ const RecentTransactions = ({
               type="full"
             />
 
-            <TransactionsTable transactions={transactions} />
+            <TransactionsTable transactions={currentTransactions} />
 
-            {/* <Pagination /> */}
+            <Pagination totalPages={totalPages} page={page} />
           </TabsContent>
         ))}
       </Tabs>
