@@ -37,3 +37,4 @@ const Category = ({ category }: CategoryProps) => {
 };
 
 export default Category;
+//Finalise the project
