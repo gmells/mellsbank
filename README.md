@@ -67,8 +67,8 @@ Make sure you have the following installed on your machine:
 **Cloning the Repository**
 
 ```bash
-https://github.com/gmells/trnc-home-spotter-system.git
-cd trnc-home-spotter-system
+git clone https://github.com/gmells/mellsbank.git
+cd mellsbank
 ```
 
 **Installation**
@@ -79,96 +79,41 @@ Install the project dependencies using npm:
 npm install
 ```
 
+**Set Up Environment Variables**
+
+Create a new file named .env in the root of your project and add the following content:
+
+```bash
+#NEXT
+NEXT_PUBLIC_SITE_URL=
+
+#APPWRITE
+NEXT_PUBLIC_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+NEXT_PUBLIC_APPWRITE_PROJECT=
+APPWRITE_DATABASE_ID=
+APPWRITE_USER_COLLECTION_ID=
+APPWRITE_BANK_COLLECTION_ID=
+APPWRITE_TRANSACTION_COLLECTION_ID=
+APPWRITE_SECRET=
+
+#PLAID
+PLAID_CLIENT_ID=
+PLAID_SECRET=
+PLAID_ENV=
+PLAID_PRODUCTS=
+PLAID_COUNTRY_CODES=
+
+#DWOLLA
+DWOLLA_KEY=
+DWOLLA_SECRET=
+DWOLLA_BASE_URL=https://api-sandbox.dwolla.com
+DWOLLA_ENV=sandbox
+```
+
+Replace the placeholder values with your actual respective account credentials. You can obtain these credentials by signing up on the [Appwrite](https://appwrite.io/), [Plaid](https://plaid.com/en-gb/) and [Dwolla](https://www.dwolla.com/)
+
 **Running the Project**
 
 ```bash
 npm run dev
-
-
-# COMMIT INFORMATION
-Created a project structure/tree defining the project structure by reorganizing directories to include separate folders for components, pages, and services.
-
-
-# Project structure
-
-```bash
-./
- TRNC Home Spotter Project Structure
-|-- api
-|   |-- controllers
-|   |   |-- auth.controller.js
-|   |   |-- chat.controller.js
-|   |   |-- comment.controller.js
-|   |   |-- message.controller.js
-|   |   |-- property.controller.js
-|   |   |-- user.controller.js
-|   |-- models
-|   |   |-- chat.model.js
-|   |   |-- comment.model.js
-|   |   |-- message.model.js
-|   |   |-- property.model.js
-|   |   |-- user.model.js
-|   |-- routes
-|   |   |-- auth.route.js
-|   |   |-- chat.route.js
-|   |   |-- comment.route.js
-|   |   |-- message.route.js
-|   |   |-- property.route.js
-|   |   |-- user.route.js
-|   |   |-- redux
-|   |-- utility
-|   |   |-- error.js
-|   |   |-- verification.js
-|   |-- index.js
-|-- client
-|   |-- src
-|   |   |-- assets
-|   |   |   |-- images
-|   |   |   |   |-- home.png
-|   |   |-- components
-|   |   |   |-- Comments.jsx
-|   |   |   |-- Contacts.jsx
-|   |   |   |-- Header.jsx
-|   |   |   |-- Logo.jsx
-|   |   |   |-- OAuth.jsx
-|   |   |   |-- Privacy.jsx
-|   |   |   |-- PropertyCard.jsx
-|   |   |-- pages
-|   |   |   |-- About.jsx
-|   |   |   |-- CreateProperty.jsx
-|   |   |   |-- Home.jsx
-|   |   |   |-- Profile.jsx
-|   |   |   |-- Property.jsx
-|   |   |   |-- Search.jsx
-|   |   |   |-- SignIn.jsx
-|   |   |   |-- SignUp.jsx
-|   |   |   |-- UpdateProperty.jsx
-|   |   |   |-- ViewChat.jsx
-|   |   |-- redux
-|   |   |   |-- user
-|   |   |   |   |-- userSlice.js
-|   |   |   |-- store.js
-|   |   |-- App.js
-|   |   |-- firebase.js
-|   |   |-- index.css
-|   |   |-- main.jsx
-|   |-- .eslintrc.cjs
-|   |-- .gitignore
-|   |-- README.md
-|   |-- index.html
-|   |-- package-lock.json
-|   |-- package.json
-|   |-- postcss.config.js
-|   |-- tailwind.config.js
-|   |-- vite.config.js
-|-- documents
-|   |-- gradiiposter.pdf
-|   |--graduationproject2_201402373 doc.docx
-|-- .gitignore
-|-- README.md
-|-- package-lock.json
-|-- package.json
-
-
-
 ```
