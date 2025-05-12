@@ -1,6 +1,6 @@
 # Mellsbank
 
-  _Mellsbanak is a real-time, multi-bank digital wallet for seamless transfers and smart money management._
+  _Mellsbank is a real-time, multi-bank digital wallet for seamless transfers and smart money management._
 
 ## <a name="introduction">:star2: Introduction</a>
 
